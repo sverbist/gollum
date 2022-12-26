@@ -149,7 +149,12 @@ module Precious
         end
       end
 
-      forbid unless @allow_editing || request.request_method == 'GET'
+      forbid unless @allow_editing || request.request_method == 'GET' || request.path == '/webhook'
+    end
+    
+    post '/webhook' do
+      wiki = Gollum::Wiki.new('/wiki')
+      wiki.repo.git.pull('origin', 'wiki.ref')
     end
 
     get '/' do
